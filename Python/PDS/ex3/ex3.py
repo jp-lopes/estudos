@@ -84,28 +84,33 @@ plt.title("Espectro de Frequências - DFT padrão")
 plt.xlabel("Frequência (Hz)")
 plt.ylabel("Magnitude")
 plt.grid(True)
+plt.xlim(0, 800) # melhora visualiação limitando o eixo X até 800 Hz
 
 ##########################################################################################################################
 
 # b) Cálculo da energia para a banda de frequências de 0 Hz a 1 kHz 
 # (energia do sinal inteiro, já que a maior freq é 500Hz)
-energia_sinal = 0
-for valor in sinal:
-    energia_sinal += valor**2
 
-print(f'\nb) Energia do Sinal: {energia_sinal:.2f}')
+def calcular_energia_do_sinal(sinal):
+    energia_sinal = 0
+    for valor in sinal:
+        energia_sinal += valor**2
+    return energia_sinal
+
+print(f'\nb) Energia do Sinal: {calcular_energia_do_sinal(sinal):.2f}')
 
 ##########################################################################################################################
 
 # c) Aplicação de DFT janelada
-energias_sinais_janelados = []
+
+energias_sinais_janelados = []  # guarda a energia dos sinais janelados nessa lista para o item d)
+
 # Função de DFT janelada para evitar repetição de código
 def DFT_Janelada(funcao_janela, nome_janela):
     global x, sinal, X, N, magnitudes, frequencias, indice_plot, energias_sinais_janelados
 
     w = funcao_janela(N)
     x = sinal * w   # aplica janela ao sinal
-    fator_correcao = 1 / np.mean(w) # fator de correção para amplitudes
     X = [0j] * N
 
     for m in range(N):
@@ -118,8 +123,8 @@ def DFT_Janelada(funcao_janela, nome_janela):
 
     for m in range(N // 2):
         freq = m * freq_amostragem / N
-        if m == 0: amp = (np.abs(X[m]) / N) * fator_correcao
-        else: amp = ((2 * np.abs(X[m])) / N) * fator_correcao
+        if m == 0: amp = (np.abs(X[m]) / N)
+        else: amp = ((2 * np.abs(X[m])) / N)
         frequencias.append(freq)
         magnitudes.append(amp)
 
@@ -131,11 +136,7 @@ def DFT_Janelada(funcao_janela, nome_janela):
             print(f"{i}. Frequência: {f:.2f}Hz, Amplitude: {a:.2f}")
     print()
     
-    energia = 0
-    for valor in X:
-        energia += np.abs(valor)**2
-    energia = energia / N
-    energias_sinais_janelados.append((nome_janela, energia))
+    energias_sinais_janelados.append((nome_janela, calcular_energia_do_sinal(x)))
 
     # Plota Espectro de Frequência da DFT janelada
     plt.figure(indice_plot, figsize=(10, 6))
@@ -145,6 +146,7 @@ def DFT_Janelada(funcao_janela, nome_janela):
     plt.xlabel("Frequência (Hz)")
     plt.ylabel("Magnitude")
     plt.grid(True)
+    plt.xlim(0, 800)
 
 # Fórmulas das funções janela: https://numpy.org/doc/2.4/reference/routines.window.html
 
@@ -156,10 +158,9 @@ DFT_Janelada(np.blackman, "Blackman")
 
 ##########################################################################################################################
 # d) Energias dos Sinais Janelados (calculados na funcao DFT_Janelada)
-
+print("\nd) Energia dos Sinais Janelados:")
 for (nome_janela, energia) in energias_sinais_janelados:
-    print(f'Energia do Sinal janelado com Janela {nome_janela}: {energia:.2f}')
+    print(f'Janela {nome_janela}: {energia:.2f}')
 
 # Exibe gráficos
 plt.show()
-
