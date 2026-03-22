@@ -69,7 +69,7 @@ for m in range(N // 2):
     frequencias.append(freq)
     magnitudes.append(amp)
 
-print("a) Harmônicos Encontrados com DFT padrão:")
+print("a) Frequências encontradas com DFT padrão:")
 i = 0
 for f, a in zip(frequencias, magnitudes):
     if a > 0.1:
@@ -128,7 +128,7 @@ def DFT_Janelada(funcao_janela, nome_janela):
         frequencias.append(freq)
         magnitudes.append(amp)
 
-    print(f"Harmônicos Encontrados com DFT janelada ({nome_janela}):")
+    print(f"Frequências encontradas com DFT janelada ({nome_janela}):")
     i = 0
     for f, a in zip(frequencias, magnitudes):
         if a > 0.1:
