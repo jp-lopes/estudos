@@ -35,7 +35,7 @@ indice_plot = 1
 sinal = amp_fundamental * np.sin(2 * np.pi * freq_fundamental * vet_tempo_discreto)
 # Soma de harmônico 300Hz com amplitude 0.5
 sinal += amp_harmonico_A * np.sin(2 * np.pi * freq_harmonico_A * vet_tempo_discreto)
-# Soma de harmônico 500Hz (10 * freq fundamental) com amplitude 0.25
+# Soma de harmônico 500Hz com amplitude 0.25
 sinal += amp_harmonico_B * np.sin(2 * np.pi * freq_harmonico_B * vet_tempo_discreto)
 
 # Plota o sinal
@@ -84,12 +84,11 @@ plt.title("Espectro de Frequências - DFT padrão")
 plt.xlabel("Frequência (Hz)")
 plt.ylabel("Magnitude")
 plt.grid(True)
-plt.xlim(0, 800) # melhora visualiação limitando o eixo X até 800 Hz
+plt.xlim(0, 800) # melhora visualiação limitando o eixo X a 800 Hz
 
 ##########################################################################################################################
 
-# b) Cálculo da energia para a banda de frequências de 0 Hz a 1 kHz 
-# (energia do sinal inteiro, já que a maior freq é 500Hz)
+# b) Cálculo da energia para a banda de frequências de 0 Hz a 1 kHz (energia do sinal inteiro, já que a maior freq é 500Hz)
 
 def calcular_energia_do_sinal(sinal):
     energia_sinal = 0
@@ -153,10 +152,11 @@ def DFT_Janelada(funcao_janela, nome_janela):
 print('\nc) Aplicando DFT Janelada no sinal:')
 DFT_Janelada(np.hanning, "Hann")
 DFT_Janelada(np.hamming, "Hamming")
-DFT_Janelada(np.ones, "Retangular") # np.ones(N) retorna um array [1]*N, assim como seria a janela retangular
+DFT_Janelada(np.ones, "Retangular") # np.ones(N) retorna um array [1]*N, análogo a janela retangular
 DFT_Janelada(np.blackman, "Blackman")
 
 ##########################################################################################################################
+
 # d) Energias dos Sinais Janelados (calculados na funcao DFT_Janelada)
 print("\nd) Energia dos Sinais Janelados:")
 for (nome_janela, energia) in energias_sinais_janelados:
