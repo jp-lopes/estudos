@@ -1,5 +1,14 @@
+'''
+    SEL0615 - PROCESSAMENTO DIGITAL DE SINAIS
+    EXERCÍCIO 4
+
+    Nome: João Pedro Lopes de Melo
+    nUSP: 15588950
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 def fft_radix2(x):
     N = len(x)
@@ -42,6 +51,35 @@ def dft(x):
         X[m] = soma
     
     return X
+
+def teste_tempos(sinal):
+    print("Executando FFT 30 vezes: ")
+    FFT_times = []
+    for i in range(30):
+        start_time = time.time()
+        X = fft_radix2(sinal)
+        stop_time = time.time()
+        exec_time = stop_time - start_time
+        print(f"{i+1}. Tempo de execução da FFT: {exec_time}")
+        FFT_times.append(exec_time)
+
+    with open("fft_times.txt", "w", encoding='utf-8') as arq_fft_tempos:
+        for t in FFT_times:
+            arq_fft_tempos.write(str(t).replace('.', ',') + '\n')
+
+    print("Executando DFT 30 vezes: ")
+    DFT_times = []
+    for i in range(30):
+        start_time = time.time()
+        X = dft(sinal)
+        stop_time = time.time()
+        exec_time = stop_time - start_time
+        print(f"{i+1}. Tempo de execução da DFT: {exec_time}")
+        DFT_times.append(exec_time)
+
+    with open("dft_times.txt", "w", encoding='utf-8') as arq_dft_tempos:
+        for t in DFT_times:
+            arq_dft_tempos.write(str(t).replace('.', ',') + '\n')
 
 
 plot_idx = 0
@@ -93,7 +131,7 @@ def main():
 
     plot(frequencias, magnitudes, "Espectro de Frequências FFT", "Frequência (Hz)", "Amplitude", stem=True, xlim=500)
 
-    
+    # teste_tempos(sinal)   
 
 if __name__ == '__main__':
     main()
