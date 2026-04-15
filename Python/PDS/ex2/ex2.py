@@ -14,13 +14,13 @@ vet_amostras = []
 vet_tempo = []
 
 # Leitura dos arquivos
-with open('Sinal.txt', 'r',  encoding='utf-8') as arq_sinal:
+with open('ex2/Sinal.txt', 'r',  encoding='utf-8') as arq_sinal:
     leitor_csv = csv.reader(arq_sinal, delimiter=';')
     for linha in leitor_csv:
         for valor in linha:
             vet_amostras.append(float(valor))
     
-with open('TimeStamp.txt', 'r',  encoding='utf-8') as arq_tempo:
+with open('ex2/TimeStamp.txt', 'r',  encoding='utf-8') as arq_tempo:
     leitor_csv = csv.reader(arq_tempo, delimiter=';')
     for linha in leitor_csv:
         for valor in linha:
