@@ -1,3 +1,11 @@
+'''
+    SEL0615 - PROCESSAMENTO DIGITAL DE SINAIS
+    EXERCÍCIO 5
+
+    Nome: João Pedro Lopes de Melo
+    nUSP: 15588950
+'''
+
 import numpy as np
 import cv2
 from scipy.io import wavfile
