@@ -16,7 +16,7 @@ tipos = tipos.replace('Z', 'I')
 tipos = tipos.split()
 #print(tipos)
 
-c: list[int] = input().split()
+c: list[float] = input().split()
 #print(custos)
 
 a = [[0 for _ in range(n)] for _ in range(m)]
