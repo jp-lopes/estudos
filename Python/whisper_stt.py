@@ -12,7 +12,6 @@ https://github.com/OminousIndustries/Bob/tree/main
 
 '''
 
-import os
 import time
 import subprocess
 import wave
@@ -41,8 +40,6 @@ AUTO_RESTART_DELAY = 1.5
 # Temp file
 TEMP_WAV = Path("/tmp/recording.wav")
 
-# Optional: force a specific PipeWire source (id or name)
-MIC_TARGET = os.environ.get("MIC_TARGET")
 
 # ===== Init =====
 def init_models():
@@ -62,19 +59,17 @@ def init_models():
     return whisper
 
 
-def _spawn_pw_cat_record(rate, channels, target):
+def _spawn_pw_cat_record(rate, channels):
     cmd = [
         "pw-cat", "--record", "-",
         "--format", "s16",
         "--rate", str(rate),
         "--channels", str(channels)
     ]
-    if target:
-        cmd += ["--target", str(target)]
     return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
-def _select_record_pipeline(target):
+def _select_record_pipeline():
     """
     Try a few (rate,channels) combos so we don't crash if the device
     refuses 16k mono. Returns (proc, rate, channels, first_chunk or None, err_text).
@@ -86,7 +81,7 @@ def _select_record_pipeline(target):
         (48000, 2),                         # 48k / stereo
     ]
     for rate, ch in attempts:
-        proc = _spawn_pw_cat_record(rate, ch, target)
+        proc = _spawn_pw_cat_record(rate, ch)
         bytes_per_sample = 2
         frame_bytes = int(rate * FRAME_MS / 1000) * bytes_per_sample * ch
         chunk = proc.stdout.read(frame_bytes)
@@ -110,10 +105,8 @@ def _select_record_pipeline(target):
 def record_with_vad(timeout_seconds=30):
     """Record audio until silence is detected (VAD). Returns (bytes, rate, channels) or (None, None, None)."""
     print("Listening... (speak now)")
-    if MIC_TARGET:
-        print(f"Using source target: {MIC_TARGET}")
 
-    proc, rate, ch, first_chunk, err = _select_record_pipeline(MIC_TARGET)
+    proc, rate, ch, first_chunk, err = _select_record_pipeline()
     if not proc:
         print(f"❌ {err}")
         return None, None, None
@@ -245,10 +238,8 @@ def transcribe_audio(whisper_model, audio_path):
 
 def record_fixed_seconds(seconds=3):
     print(f"Recording ~{seconds}s for test...")
-    if MIC_TARGET:
-        print(f"Using source target: {MIC_TARGET}")
 
-    proc, rate, ch, first_chunk, err = _select_record_pipeline(MIC_TARGET)
+    proc, rate, ch, first_chunk, err = _select_record_pipeline()
     if not proc:
         print(f"❌ {err}")
         return None, None, None
@@ -282,17 +273,11 @@ def record_fixed_seconds(seconds=3):
 
 # ===== Main =====
 def main():
-    global MIC_TARGET
-
     whisper_model = init_models()
 
     print("VOICE TRANSCRIPTION READY!")
     print("="*50)
-    print("  • Stop: 'Press Ctrl+C'")
-
-    if MIC_TARGET:
-        print(f"  • Mic target override: {MIC_TARGET}")
-    print("\nListening for speech...\n")
+    print("Press Ctrl+C to stop.\n")
 
     while True:
         try:
@@ -304,7 +289,7 @@ def main():
 
                 if user_text:
                     print(f"\nYou said: \"{user_text}\"\n")
-                    if any(w in user_text.lower() for w in ["goodbye", "bye", "stop", "exit", "quit", "shut down", "turn off"]):
+                    if any(w in user_text.lower() for w in ["adeus"]):
                         break
 
                     #print(f"Ready again in {AUTO_RESTART_DELAY}s...")
