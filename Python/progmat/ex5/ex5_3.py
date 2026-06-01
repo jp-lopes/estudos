@@ -10,10 +10,10 @@ i = 0
 m = int(input())
 a = [[0 for _ in range(3)] for _ in range(m)]
 
-#print(a)
-
 for i in range(m):
-    a[i][0], a[i][1], a[i][2] = input().split(" ")
+    linha_m = input().split()
+    a[i][0], a[i][1], a[i][2] = [float(k) for k in linha_m]
+
 
 # 2. Instanciar Variáveis
 # vtype="I" para Inteiras, "C" para Contínuas, "B" para Binárias.

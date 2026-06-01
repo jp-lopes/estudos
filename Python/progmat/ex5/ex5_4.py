@@ -11,10 +11,9 @@ n = int(input())
 m = int(input())
 a = [[0 for _ in range(n)] for _ in range(m)]
 
-#print(a)
-
 for j in range(m):
     linha_m = input().split(" ")
+    linha_m = [float(k) for k in linha_m]
     for i in range(n):
         a[j][i] = linha_m[i]
 
