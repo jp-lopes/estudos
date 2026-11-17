@@ -84,6 +84,7 @@ void destroy_entities()
 void setup() {
   set_microros_transports();
   pinMode(LED_PIN, OUTPUT);
+  inMode(LED_STATUS, OUTPUT);
 
   state = WAITING_AGENT;
 
